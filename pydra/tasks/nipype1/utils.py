@@ -15,7 +15,7 @@ def traitedspec_to_specinfo(traitedspec):
     )
 
 
-class Nipype1Task(pydra.TaskBase):
+class Nipype1Task(pydra.engine.task.TaskBase):
     """Wrap a Python callable as a task element."""
 
     def __init__(
