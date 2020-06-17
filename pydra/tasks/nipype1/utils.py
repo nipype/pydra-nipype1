@@ -5,11 +5,12 @@ import typing as ty
 
 
 def traitedspec_to_specinfo(traitedspec):
+    trait_names = set(traitedspec.copyable_trait_names())
     return pydra.specs.SpecInfo(
         name="Inputs",
         fields=[
             (name, attr.ib(type=ty.Any, metadata={"help_string": trait.desc}))
-            for name, trait in traitedspec.traits().items()
+            for name, trait in traitedspec.traits().items() if name in trait_names
         ],
         bases=(pydra.engine.specs.BaseSpec,)
     )
@@ -49,7 +50,7 @@ class Nipype1Task(pydra.engine.task.TaskBase):
         name=None,
         **kwargs,
     ):
-        self.input_spec = traitedspec_to_specinfo(interface.input_spec())
+        self.input_spec = traitedspec_to_specinfo(interface.inputs)
         self._interface = interface
         if name is None:
             name = interface.__class__.__name__
@@ -62,7 +63,7 @@ class Nipype1Task(pydra.engine.task.TaskBase):
             cache_dir=cache_dir,
             cache_locations=cache_locations,
         )
-        self.output_spec = traitedspec_to_specinfo(interface.output_spec())
+        self.output_spec = traitedspec_to_specinfo(interface._outputs())
 
     def _run_task(self):
         inputs = attr.asdict(self.inputs,
