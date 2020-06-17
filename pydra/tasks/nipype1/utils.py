@@ -16,7 +16,27 @@ def traitedspec_to_specinfo(traitedspec):
 
 
 class Nipype1Task(pydra.engine.task.TaskBase):
-    """Wrap a Python callable as a task element."""
+    """Wrap a Nipype 1.x Interface as a Pydra Task
+
+    This utility translates the Nipype 1 input and output specs to
+    Pydra-style specs, wraps the run command, and exposes the output
+    in Pydra Task outputs.
+
+    >>> import pytest
+    >>> from pkg_resources import resource_filename
+    >>> from nipype.interfaces import fsl
+    >>> if fsl.Info.version() is None:
+    ...     pytest.skip()
+    >>> img = resource_filename('nipype', 'testing/data/tpms_msk.nii.gz')
+
+    >>> from pydra.tasks.nipype1.utils import Nipype1Task
+    >>> thresh = Nipype1Task(fsl.Threshold())
+    >>> thresh.inputs.in_file = img
+    >>> thresh.inputs.thresh = 0.5
+    >>> res = thresh()
+    >>> res.output.out_file  # DOCTEST: +ELLIPSIS
+    '.../tpms_msk_thresh.nii.gz'
+    """
 
     def __init__(
         self,
