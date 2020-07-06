@@ -16,6 +16,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8]
+        pydra-editable: [false, true]
+        pip-flags: ['', '-e']
 
     steps:
     - uses: actions/checkout@v2
@@ -25,8 +27,22 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install ".[dev]"
+        python -m pip install --upgrade pip setuptools wheel
+        if ${{ matrix.pydra-editable }}; then (
+            cd /tmp
+            git clone https://github.com/effigies/pydra.git
+            cd pydra
+            git checkout fix/namespace
+            pip install -e .
+        ); else
+            pip install git+https://github.com/effigies/pydra.git@fix/namespace
+        fi
+        pip install ${{ matrix.pip-flags }} ".[dev]"
+    - name: Verify installation paths
+      run: |
+        cd /
+        python -c "import pydra as mod; print(f'{mod.__version__} - {mod.__file__}')"
+        python -c "import pydra.tasks.nipype1 as mod; print(f'{mod.__version__} - {mod.__file__}')"
     - name: Test with pytest
       run: |
         pytest -sv --doctest-modules pydra/tasks/nipype1
