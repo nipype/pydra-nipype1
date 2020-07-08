@@ -3,6 +3,10 @@
 
 name: Python package
 
+# Set once
+env:
+  SUBPACKAGE: nipype1
+
 on:
   push:
     branches: [ master ]
@@ -11,11 +15,14 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.7, 3.8]
+        pip-flags: ['', '--editable']
+        pydra:
+        - 'pydra'
+        - '--editable git+https://github.com/nipype/pydra.git#egg=pydra'
 
     steps:
     - uses: actions/checkout@v2
@@ -23,10 +30,18 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install ".[dev]"
+    - name: Install Pydra
+      run: |
+        pip install ${{ matrix.pydra }}
+        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+    - name: Install task package
+      run: |
+        pip install ${{ matrix.pip-flags }} ".[dev]"
+        python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
     - name: Test with pytest
       run: |
-        pytest -sv --doctest-modules pydra/tasks/nipype1
+        pytest -sv --doctest-modules pydra/tasks/$SUBPACKAGE

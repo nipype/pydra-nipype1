@@ -10,9 +10,10 @@ def traitedspec_to_specinfo(traitedspec):
         name="Inputs",
         fields=[
             (name, attr.ib(type=ty.Any, metadata={"help_string": trait.desc}))
-            for name, trait in traitedspec.traits().items() if name in trait_names
+            for name, trait in traitedspec.traits().items()
+            if name in trait_names
         ],
-        bases=(pydra.engine.specs.BaseSpec,)
+        bases=(pydra.engine.specs.BaseSpec,),
     )
 
 
@@ -66,7 +67,6 @@ class Nipype1Task(pydra.engine.task.TaskBase):
         self.output_spec = traitedspec_to_specinfo(interface._outputs())
 
     def _run_task(self):
-        inputs = attr.asdict(self.inputs,
-                             filter=lambda a, v: v is not attr.NOTHING)
+        inputs = attr.asdict(self.inputs, filter=lambda a, v: v is not attr.NOTHING)
         res = self._interface.run(**inputs)
         self.output_ = res.outputs.get()
