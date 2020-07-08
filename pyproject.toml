@@ -1,0 +1,4 @@
+[tool.black]
+line-length = 99
+target-version = ['py37', 'py38']
+exclude = '_version.py'
