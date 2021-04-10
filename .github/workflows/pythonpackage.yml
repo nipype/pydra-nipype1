@@ -77,7 +77,7 @@ jobs:
       if: ${{ always() }}
 
   deploy:
-    needs: test
+    needs: [devcheck, test]
     runs-on: ubuntu-latest
     strategy:
       matrix:
