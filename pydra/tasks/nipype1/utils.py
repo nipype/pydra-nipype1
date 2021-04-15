@@ -68,7 +68,7 @@ class Nipype1Task(pydra.engine.task.TaskBase):
 
     def _run_task(self):
         inputs = attr.asdict(self.inputs, filter=lambda a, v: v is not attr.NOTHING)
-        node = nipype.Node(self._interface, base_dir=self.output_dir, name=self.name)
+        node = nipype.Node(self._interface.copy(), base_dir=self.output_dir, name=self.name)
         node.inputs.trait_set(**inputs)
         res = node.run()
         self.output_ = res.outputs.get()
