@@ -3,6 +3,8 @@ import shutil
 from pkg_resources import resource_filename
 
 from nipype.interfaces import fsl
+import nipype.interfaces.utility as nutil
+
 from pydra.tasks.nipype1.utils import Nipype1Task
 
 
@@ -21,3 +23,26 @@ def test_isolation(tmp_path):
     res = slicer()
     assert res.output.out_files
     assert all(fname.startswith(str(out_dir)) for fname in res.output.out_files)
+
+
+def test_preserve_input_types():
+
+    def with_tuple(in_param : tuple):
+        out_param = in_param 
+        return out_param
+
+
+    tuple_interface = nutil.Function(
+        input_names = ['in_param'],
+        output_names = ['out_param'],
+        function = with_tuple
+    )
+
+    nipype1_task_tuple = Nipype1Task(
+        interface = tuple_interface,
+        in_param = tuple(['test'])
+    )
+    
+    nipype1_task_tuple()
+
+    assert(isinstance(nipype1_task_tuple._interface._list_outputs()['out_param'], tuple))
