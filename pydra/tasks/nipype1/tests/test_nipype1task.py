@@ -26,23 +26,16 @@ def test_isolation(tmp_path):
 
 
 def test_preserve_input_types():
-
-    def with_tuple(in_param : tuple):
-        out_param = in_param 
+    def with_tuple(in_param: tuple):
+        out_param = in_param
         return out_param
 
-
     tuple_interface = nutil.Function(
-        input_names = ['in_param'],
-        output_names = ['out_param'],
-        function = with_tuple
+        input_names=["in_param"], output_names=["out_param"], function=with_tuple
     )
 
-    nipype1_task_tuple = Nipype1Task(
-        interface = tuple_interface,
-        in_param = tuple(['test'])
-    )
-    
+    nipype1_task_tuple = Nipype1Task(interface=tuple_interface, in_param=tuple(["test"]))
+
     nipype1_task_tuple()
 
-    assert(isinstance(nipype1_task_tuple._interface._list_outputs()['out_param'], tuple))
+    assert isinstance(nipype1_task_tuple._interface._list_outputs()["out_param"], tuple)
