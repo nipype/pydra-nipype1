@@ -1,5 +1,9 @@
 # Nipype 1 Tasks for Pydra
 
+[![PyPI version](https://badge.fury.io/py/pydra-nipype1.svg)](https://badge.fury.io/py/pydra-nipype1)
+[![github](https://github.com/nipype/pydra-nipype1/actions/workflows/pythonpackage.yml/badge.svg)](https://github.com/nipype/pydra-nipype1/actions/workflows/pythonpackage.yml)
+[![codecov](https://codecov.io/gh/nipype/pydra-nipype1/branch/main/graph/badge.svg?token=WP83ZHM410)](https://codecov.io/gh/nipype/pydra-nipype1)
+
 [Pydra](https://nipype.github.io/pydra/) is a redesign of the Nipype dataflow
 engine, and the core of the emerging
 [Nipype 2 ecosystem](https://github.com/nipype).
