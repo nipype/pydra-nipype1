@@ -1,6 +1,6 @@
 import pydra
 import nipype
-import attr
+import attrs
 import typing as ty
 
 
@@ -9,7 +9,7 @@ def traitedspec_to_specinfo(traitedspec):
     return pydra.specs.SpecInfo(
         name="Inputs",
         fields=[
-            (name, attr.ib(type=ty.Any, metadata={"help_string": trait.desc}))
+            (name, attrs.field(metadata={"help_string": trait.desc}))
             for name, trait in traitedspec.traits().items()
             if name in trait_names
         ],
@@ -67,9 +67,7 @@ class Nipype1Task(pydra.engine.task.TaskBase):
         self.output_spec = traitedspec_to_specinfo(interface._outputs())
 
     def _run_task(self):
-        inputs = attr.asdict(
-            self.inputs, filter=lambda a, v: v is not attr.NOTHING, retain_collection_types=True
-        )
+        inputs = attrs.asdict(self.inputs, filter=lambda a, v: v is not attrs.NOTHING)
         node = nipype.Node(self._interface, base_dir=self.output_dir, name=self.name)
         node.inputs.trait_set(**inputs)
         res = node.run()
