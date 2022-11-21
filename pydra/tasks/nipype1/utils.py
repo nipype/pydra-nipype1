@@ -3,6 +3,8 @@ import nipype
 import attrs
 import typing as ty
 
+__all__ = ["Nipype1Task"]
+
 
 def traitedspec_to_specinfo(traitedspec):
     trait_names = set(traitedspec.copyable_trait_names())
