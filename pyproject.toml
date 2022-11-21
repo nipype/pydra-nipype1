@@ -1,4 +1,68 @@
+[build-system]
+requires = ["flit_scm"]
+build-backend = "flit_scm:buildapi"
+
+[project]
+name = "pydra-nipype1"
+description = "Tools for importing nipype 1.x interfaces into Pydra"
+readme = "README.md"
+requires-python = "~=3.7"
+dependencies = [
+    "pydra >=0.6.2",
+    "nipype",
+    "attrs >=21.3.0",
+]
+license = {file = "LICENSE"}
+authors = [
+    {name = "Chris Markiewicz", email = "markiewicz@stanford.edu"},
+]
+keywords = [
+    "pydra",
+    "nipype",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pre-commit",
+]
+doc = [
+    "packaging",
+    "sphinx >=2.1.2",
+    "sphinx_rtd_theme",
+    "sphinxcontrib-apidoc ~=0.3.0",
+    "sphinxcontrib-napoleon",
+    "sphinxcontrib-versioning",
+]
+test = [
+    "pytest>=4.4.0",
+    "pytest-cov",
+]
+
+[project.urls]
+homepage = "https://github.com/nipype/pydra-nipype1"
+repository = "https://github.com/nipype/pydra-nipype1"
+
+[tool.flit.module]
+name = "pydra.tasks.nipype1"
+
+[tool.flit.sdist]
+exclude = [".gitignore"]
+
+[tool.setuptools_scm]
+write_to = "pydra/tasks/nipype1/_version.py"
+
 [tool.black]
 line-length = 99
-target-version = ['py37', 'py38']
-exclude = '_version.py'
+target-version = ["py37", "py38"]
+exclude = "_version.py"
