@@ -5,7 +5,7 @@ from pkg_resources import resource_filename
 from nipype.interfaces import fsl
 import nipype.interfaces.utility as nutil
 
-from pydra.tasks.nipype1.utils import Nipype1Task
+from pydra.tasks.nipype1 import Nipype1Task
 
 
 @pytest.mark.skipif(fsl.Info.version() is None, reason="Test requires FSL")
