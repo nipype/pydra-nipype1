@@ -6,7 +6,7 @@ on:
     types:
       - published
 
-permission:
+permissions:
   # Allow checkout of the project.
   contents: read
 
