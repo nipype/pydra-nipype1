@@ -57,5 +57,5 @@ write_to = "pydra/tasks/nipype1/_version.py"
 
 [tool.black]
 line-length = 99
-target-version = ["py37", "py38"]
+target-version = ["py37"]
 exclude = "_version.py"
