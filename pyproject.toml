@@ -17,7 +17,7 @@ authors = [
     {name = "Chris Markiewicz", email = "markiewicz@stanford.edu"},
 ]
 maintainers = [
-    {name = "Ghislain Vaillant", email = "ghislain.vaillant@icm-institute.org"},
+    {name = "Nipype developers", email = "neuroimaging@python.org"},
 ]
 keywords = [
     "pydra",
