@@ -1,0 +1,19 @@
+# EditorConfig <editorconfig.org>
+
+# This is the top-most EditorConfig file.
+root = true
+
+# Use Unix-style newlines with a newline ending for all files.
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+# Use 4-space indentation for Python.
+[*.py]
+indent_size = 4
+indent_style = space
+
+# Use 2-space indentation for YAML.
+[*.{yml,yaml}]
+indent_size = 2
+indent_style = space
