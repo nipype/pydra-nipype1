@@ -16,6 +16,9 @@ license = {file = "LICENSE"}
 authors = [
     {name = "Chris Markiewicz", email = "markiewicz@stanford.edu"},
 ]
+maintainers = [
+    {name = "Ghislain Vaillant", email = "ghislain.vaillant@icm-institute.org"},
+]
 keywords = [
     "pydra",
     "nipype",
