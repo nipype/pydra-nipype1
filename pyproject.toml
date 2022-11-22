@@ -6,7 +6,7 @@ build-backend = "flit_scm:buildapi"
 name = "pydra-nipype1"
 description = "Tools for importing nipype 1.x interfaces into Pydra"
 readme = "README.md"
-requires-python = "~=3.7"
+requires-python = ">=3.7"
 dependencies = [
     "pydra >=0.6.2",
     "nipype",
