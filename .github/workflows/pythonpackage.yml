@@ -10,7 +10,6 @@ env:
 on:
   push:
     branches: [ main ]
-    tags: [ '*' ]
   pull_request:
     branches: [ main ]
 
@@ -19,101 +18,85 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.11']  # Check oldest and newest versions
-        pip-flags: ['', '--editable']
+        python-version: [ '3.7', '3.11' ]  # Check oldest and newest versions
+        pip-flags: [ '', '--editable' ]
         pydra:
-        - 'pydra'
-        - '--editable git+https://github.com/nipype/pydra.git#egg=pydra'
+          - 'pydra'
+          - '--editable git+https://github.com/nipype/pydra.git#egg=pydra'
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-    - name: Install Pydra
-      run: |
-        pip install ${{ matrix.pydra }}
-        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-    - name: Install task package
-      run: |
-        pip install ${{ matrix.pip-flags }} ".[dev]"
-        python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+      - name: Install Pydra
+        run: |
+          pip install ${{ matrix.pydra }}
+          python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+      - name: Install task package
+        run: |
+          pip install ${{ matrix.pip-flags }} ".[dev]"
+          python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+          python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
 
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Set up NeuroDebian
-      run: bash <(wget -q -O- http://neuro.debian.net/_files/neurodebian-travis.sh)
-    - name: Install FSL
-      run: sudo apt-get install -y fsl
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-    - name: Install task package
-      run: |
-        pip install ".[test]"
-        python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-    - name: Test with pytest
-      run: |
-        source /etc/fsl/fsl.sh
-        pytest -sv --doctest-modules pydra/tasks/$SUBPACKAGE \
-            --cov pydra.tasks.$SUBPACKAGE --cov-report xml
-    - uses: codecov/codecov-action@v1
-      if: ${{ always() }}
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up NeuroDebian
+        run: bash <(wget -q -O- http://neuro.debian.net/_files/neurodebian-travis.sh)
+      - name: Install FSL
+        run: sudo apt-get install -y fsl
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+      - name: Install task package
+        run: |
+          pip install ".[test]"
+          python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+          python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+      - name: Test with pytest
+        run: |
+          source /etc/fsl/fsl.sh
+          pytest -sv --doctest-modules pydra/tasks/$SUBPACKAGE \
+              --cov pydra.tasks.$SUBPACKAGE --cov-report xml
+      - uses: codecov/codecov-action@v1
+        if: ${{ always() }}
 
   deploy:
-    needs: [devcheck, test]
+    needs: [ devcheck, test ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [ '3.9' ]
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-        fetch-depth: 0
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install build tools
-      run: python -m pip install build twine
-    - name: Build source and wheel distributions
-      run: python -m build
-    - name: Check distributions
-      run: twine check dist/*
-    - uses: actions/upload-artifact@v2
-      with:
-        name: distributions
-        path: dist/
-    # Deploy on tags if PYPI_API_TOKEN is defined in the repository secrets.
-    # Secrets are not accessible in the if: condition [0], so set an output variable [1]
-    # [0] https://github.community/t/16928
-    # [1] https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
-    - name: Check for PyPI token on tag
-      id: deployable
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-      env:
-        PYPI_API_TOKEN: "${{ secrets.PYPI_API_TOKEN }}"
-      run: if [ -n "$PYPI_API_TOKEN" ]; then echo ::set-output name=DEPLOY::true; fi
-    - name: Upload to PyPI
-      if: steps.deployable.outputs.DEPLOY
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29  # v1.4.2
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install build tools
+        run: python -m pip install build twine
+      - name: Build source and wheel distributions
+        run: python -m build
+      - name: Check distributions
+        run: twine check dist/*
+      - uses: actions/upload-artifact@v2
+        with:
+          name: distributions
+          path: dist/
