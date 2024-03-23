@@ -64,6 +64,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/conda_pkgs_dir
+            ~/.cache/pip
+          key: ${{ runner.os }}-conda-${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}
+        env:
+          # Bump to reset cache
+          CACHE_NUMBER: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: conda-incubator/setup-miniconda@v3
         with:
