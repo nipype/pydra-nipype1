@@ -108,6 +108,7 @@ jobs:
     permissions:
       id-token: write
     if: github.repository_owner == 'nipype' && github.event.action == 'published'
+    environment: Publish
     steps:
       - uses: actions/download-artifact@v4
         with:
