@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2024-03-22
+
+### Changed
+
+* Pydra 0.23+ compatibility
+* Drop Python 3.7 compatibility, test Python 3.12
+* Updates to CI workflows
+
 ## [0.2.2] – 2022-11-22
 
 ### Changed
@@ -37,6 +45,7 @@ All notable changes to this project will be documented in this file.
 
 - Initial release for PyPI
 
+[0.3.0]: https://github.com/nipype/pydra-nipype1/compare/0.2.2...0.3.0
 [0.2.2]: https://github.com/nipype/pydra-nipype1/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/nipype/pydra-nipype1/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/nipype/pydra-nipype1/compare/0.1.0...0.2.0
