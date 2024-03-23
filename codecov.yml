@@ -1,10 +1,7 @@
 coverage:
   range: "50...100"
   ignore:          # files and folders that will be removed during processing
-    - "**/tests"
     - "**/_version.py"
-    - "setup.py"
-    - "versioneer.py"
   status:
     project:
       default:
