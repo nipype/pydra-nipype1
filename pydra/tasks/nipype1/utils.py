@@ -69,7 +69,6 @@ class Nipype1Task(pydra.engine.task.TaskBase):
         )
         self.output_spec = traitedspec_to_specinfo(interface._outputs())
 
-
     def _run_task(self, environment=None):
         inputs = attrs.asdict(self.inputs, filter=lambda a, v: v is not attrs.NOTHING)
         node = nipype.Node(deepcopy(self._interface), base_dir=self.output_dir, name=self.name)
