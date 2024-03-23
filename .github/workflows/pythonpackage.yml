@@ -7,6 +7,7 @@ name: Python package
 env:
   SUBPACKAGE: nipype1
   FSLCONDA: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public/
+  NO_ET: 1  # etelemetry causes order-of-magnitude slowdowns
 
 on:
   push:
