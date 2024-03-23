@@ -1,4 +1,13 @@
-from ._version import get_versions
+"""
+>>> from pydra import ShellCommandTask
+>>> import pydra.tasks.nipype1
+"""
 
-__version__ = get_versions()["version"]
-del get_versions
+try:
+    from ._version import __version__
+except ImportError:
+    pass
+
+from .utils import Nipype1Task
+
+__all__ = ["Nipype1Task"]

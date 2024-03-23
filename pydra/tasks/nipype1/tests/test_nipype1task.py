@@ -1,18 +1,18 @@
 import pytest
 import shutil
-from pkg_resources import resource_filename
+from . import load_resource
 
 from nipype.interfaces import fsl
 import nipype.interfaces.utility as nutil
 
-from pydra.tasks.nipype1.utils import Nipype1Task
+from pydra.tasks.nipype1 import Nipype1Task
 
 
 @pytest.mark.skipif(fsl.Info.version() is None, reason="Test requires FSL")
 def test_isolation(tmp_path):
     in_file = tmp_path / "orig/tpms_msk.nii.gz"
     in_file.parent.mkdir()
-    shutil.copyfile(resource_filename("nipype", "testing/data/tpms_msk.nii.gz"), in_file)
+    shutil.copyfile(load_resource("nipype", "testing/data/tpms_msk.nii.gz"), in_file)
 
     out_dir = tmp_path / "output"
     out_dir.mkdir()
