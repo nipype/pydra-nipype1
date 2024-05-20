@@ -2,4 +2,8 @@
 branch = True
 omit =
     */_version.py
-    */tests/*
+
+[paths]
+source =
+    pydra/tasks
+    /**/pydra/tasks
