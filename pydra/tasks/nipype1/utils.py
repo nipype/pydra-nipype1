@@ -2,6 +2,7 @@ import pydra
 import nipype
 import attrs
 import typing as ty
+from copy import deepcopy
 
 __all__ = ["Nipype1Task"]
 
@@ -70,7 +71,7 @@ class Nipype1Task(pydra.engine.task.TaskBase):
 
     def _run_task(self, environment=None):
         inputs = attrs.asdict(self.inputs, filter=lambda a, v: v is not attrs.NOTHING)
-        node = nipype.Node(self._interface, base_dir=self.output_dir, name=self.name)
+        node = nipype.Node(deepcopy(self._interface), base_dir=self.output_dir, name=self.name)
         node.inputs.trait_set(**inputs)
         res = node.run()
         self.output_ = res.outputs.get()
