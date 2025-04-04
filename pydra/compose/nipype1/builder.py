@@ -152,19 +152,18 @@ class Nipype1Task(base.Task):
     in Pydra Task outputs.
 
     >>> import pytest
-    >>> from pydra.tasks.nipype1.tests import load_resource
+    >>> from pydra.compose.nipype1.tests import load_resource
     >>> from nipype.interfaces import fsl
     >>> if fsl.Info.version() is None:
     ...     pytest.skip()
     >>> img = load_resource('nipype', 'testing/data/tpms_msk.nii.gz')
 
-    >>> from pydra.tasks.nipype1.utils import Nipype1Task
-    >>> thresh = Nipype1Task(fsl.Threshold())
-    >>> thresh.inputs.in_file = img
-    >>> thresh.inputs.thresh = 0.5
+    >>> from pydra.compose.nipype1.builder import define
+    >>> Threshold = define(fsl.Threshold())
+    >>> thresh = Threshold(in_file=img, thresh=0.5)
     >>> res = thresh()
-    >>> res.output.out_file  # DOCTEST: +ELLIPSIS
-    '.../tpms_msk_thresh.nii.gz'
+    >>> res.out_file  # DOCTEST: +ELLIPSIS
+    File('.../tpms_msk_thresh.nii.gz')
     """
 
     _task_type = "nipype1"
