@@ -12,7 +12,5 @@ if os.getenv("_PYTEST_RAISE", "0") != "0":
             raise call.excinfo.value
 
     @pytest.hookimpl(tryfirst=True)
-    def pytest_internalerror(
-        excinfo: pytest.ExceptionInfo[BaseException]
-    ) -> None:
+    def pytest_internalerror(excinfo: pytest.ExceptionInfo[BaseException]) -> None:
         raise excinfo.value

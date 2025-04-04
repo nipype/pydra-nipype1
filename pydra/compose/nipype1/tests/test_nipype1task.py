@@ -11,10 +11,7 @@ from . import load_resource
 def test_isolation(tmp_path):
     in_file = tmp_path / "orig/tpms_msk.nii.gz"
     in_file.parent.mkdir()
-    shutil.copyfile(
-        load_resource("nipype", "testing/data/tpms_msk.nii.gz"),
-        in_file
-    )
+    shutil.copyfile(load_resource("nipype", "testing/data/tpms_msk.nii.gz"), in_file)
 
     out_dir = tmp_path / "output"
     out_dir.mkdir()
@@ -33,9 +30,7 @@ def test_preserve_input_types():
         return out_param
 
     tuple_interface = nutil.Function(
-        input_names=["in_param"],
-        output_names=["out_param"],
-        function=with_tuple
+        input_names=["in_param"], output_names=["out_param"], function=with_tuple
     )
 
     TaskTuple = nipype1.define(tuple_interface)

@@ -176,9 +176,7 @@ class Nipype1Task(base.Task):
             for n, v in task_dict(self).items()
             if v is not None or fields[n].mandatory
         }
-        node = nipype.Node(
-            self._interface, base_dir=job.cache_dir, name=type(self).__name__
-        )
+        node = nipype.Node(self._interface, base_dir=job.cache_dir, name=type(self).__name__)
         node.inputs.trait_set(**inputs)
         res = node.run()
         job.return_values = res.outputs.get()
@@ -202,9 +200,7 @@ def traitedspec_to_fields(
         else:
             default = base.NO_DEFAULT
         if name in trait_names:
-            fields[name] = field_type(
-                name=name, help=trait.desc, type=type_, default=default
-            )
+            fields[name] = field_type(name=name, help=trait.desc, type=type_, default=default)
     return fields
 
 
