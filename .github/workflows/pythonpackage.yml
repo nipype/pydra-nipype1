@@ -34,7 +34,7 @@ jobs:
         python-version: ["3.11", "3.12"] # Check oldest and newest versions
         pip-flags: ["", "--editable"]
         pydra:
-          - "pydra"
+          - "'pydra>=1.0a0'"
           - "--editable git+https://github.com/nipype/pydra.git#egg=pydra"
 
     steps:
