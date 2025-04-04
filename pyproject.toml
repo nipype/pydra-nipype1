@@ -1,6 +1,6 @@
 [build-system]
-requires = ["flit_scm"]
-build-backend = "flit_scm:buildapi"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 [project]
 name = "pydra-nipype1"
@@ -49,16 +49,20 @@ test = [
 homepage = "https://github.com/nipype/pydra-nipype1"
 repository = "https://github.com/nipype/pydra-nipype1"
 
-[tool.flit.module]
-name = "pydra.tasks.nipype1"
+[tool.hatch.version]
+source = "vcs"
 
-[tool.flit.sdist]
-exclude = [".gitignore"]
+[tool.hatch.build.hooks.vcs]
+version-file = "pydra/compose/nipype1/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pydra"]
+include-only = ["pydra/compose/nipype1"]
 
 [tool.setuptools_scm]
-write_to = "pydra/tasks/nipype1/_version.py"
+write_to = "pydra/compose/nipype1/_version.py"
 
 [tool.black]
 line-length = 99
-target-version = ["py37"]
+target-version = ["py311"]
 exclude = "_version.py"
