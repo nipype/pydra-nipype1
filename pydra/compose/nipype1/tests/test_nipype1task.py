@@ -1,11 +1,10 @@
 import pytest
 import shutil
-from . import load_resource
-
+from fileformats.generic import File
+from pydra.compose import nipype1
 from nipype.interfaces import fsl
 import nipype.interfaces.utility as nutil
-
-from pydra.tasks.nipype1 import Nipype1Task
+from . import load_resource
 
 
 @pytest.mark.skipif(fsl.Info.version() is None, reason="Test requires FSL")
@@ -17,12 +16,12 @@ def test_isolation(tmp_path):
     out_dir = tmp_path / "output"
     out_dir.mkdir()
 
-    slicer = Nipype1Task(fsl.Slice(), cache_dir=str(out_dir))
-    slicer.inputs.in_file = in_file
+    Slicer = nipype1.define(fsl.Slice())
+    slicer = Slicer(in_file=File(in_file))
 
-    res = slicer()
-    assert res.output.out_files
-    assert all(fname.startswith(str(out_dir)) for fname in res.output.out_files)
+    outputs = slicer(cache_root=out_dir)
+    assert outputs.out_files
+    assert all(fname.startswith(str(out_dir)) for fname in outputs.out_files)
 
 
 def test_preserve_input_types():
@@ -34,8 +33,9 @@ def test_preserve_input_types():
         input_names=["in_param"], output_names=["out_param"], function=with_tuple
     )
 
-    nipype1_task_tuple = Nipype1Task(interface=tuple_interface, in_param=tuple(["test"]))
+    TaskTuple = nipype1.define(tuple_interface)
+    nipype1_task_tuple = TaskTuple(in_param=tuple(["test"]))
 
-    nipype1_task_tuple()
+    outputs = nipype1_task_tuple()
 
-    assert isinstance(nipype1_task_tuple._interface._list_outputs()["out_param"], tuple)
+    assert isinstance(outputs.out_param, tuple)
