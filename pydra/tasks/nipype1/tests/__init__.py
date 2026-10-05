@@ -3,7 +3,6 @@ from atexit import register
 from contextlib import ExitStack
 from functools import lru_cache
 
-
 if sys.version_info < (3, 9):
     from importlib_resources import as_file, files
 else:
